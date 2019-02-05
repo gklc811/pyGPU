@@ -1,0 +1,20 @@
+<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+
+<script type="text/javascript" src="https://mpld3.github.io/js/mpld3.v0.2.js"></script>
+<style>
+</style>
+
+
+{% for dict_item in parent_dict %}
+   {% for key, value in dict_item.items() %}
+      <div id="f{{key}}"></div>
+   {% endfor %}
+{% endfor %}
+
+<script type="text/javascript">
+{% for dict_item in parent_dict %}
+   {% for key, value in dict_item.items() %}
+      mpld3.draw_figure("f{{key}}",{{value}});
+   {% endfor %}
+{% endfor %}
+</script>
