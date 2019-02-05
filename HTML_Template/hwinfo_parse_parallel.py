@@ -26,7 +26,7 @@ for i in x:
 
 # choose certain columns
 nd = nd[['period', 'Total_CPU_Usage_[%]', 'CPU_Package_[°C].1', 'CPU_Package_Power_[W]', 'System1_[°C]', 'PCH_[°C]',
-         'PCIEX16_[°C]', 'VRM_MOS_[°C]', 'EC_TEMP1/System2_[°C]', 'CPU_[RPM]', 'System_1_[RPM]', 'System_2_(VRM)_[RPM]',
+         'PCIEX16_[°C]', 'VRM_MOS_[°C]', 'EC_TEMP1/System2_[°C]', 'CPU_[RPM]', 'System_1_[RPM]',
          'System_2_(VRM)_[RPM]', 'System_3_[RPM]', 'Drive_Temperature_[°C]', 'GPU_Temperature_[°C]', 'GPU_Fan_[RPM]',
          'GPU_Power_[W]', 'GPU_D3D_Usage_[%]']]
 
@@ -44,7 +44,8 @@ for i in list(perm):
 def plotfig(key, combination_dict, nd):
     jsdict = {}
     fig, ax = plt.subplots()
-    nd.plot(x="period", y=combination_dict[key], kind="line", ax=ax, fig=fig)
+    cor = nd[combination_dict[key][0]].corr(nd[combination_dict[key][1]])
+    nd.plot(x="period", y=combination_dict[key], kind="line", title="correlation factor : " + str(cor), ax=ax, fig=fig)
     jsdict[list(combination_dict.keys()).index(key)] = json.dumps(mpld3.fig_to_dict(fig), skipkeys=True)
     plt.close(fig)
     return jsdict
@@ -57,8 +58,6 @@ if __name__ == '__main__':
     pool = Pool(processes)
     # find the correlation - plot
 
-    # for key in combination_dict:
-    #     plotfig(nd, combination_dict[key], jsdict)
     test = pool.starmap_async(plotfig,
                               zip(list(combination_dict.keys()), repeat(combination_dict), repeat(nd)))
     jsdict = {}
